@@ -1,40 +1,28 @@
 const {Client, MessageEmbed, Message, Emoji} = require('discord.js');
 const client = new Client();
+const saludo = require('./module');
 const ytdl = require('ytdl-core');
 
 client.on('ready', () => {
   console.log(`Logged in as ${client.user.tag}!`);
 });
 
-var queue =[];
-var i = 0;
+
 
 client.on('message', async msg =>{
   if(!msg.guild) return;
   var command = msg.content.split(" ")
+  const connection = await msg.member.voice.channel.join();
   if(command[0] === 'play'){
     if(msg.member.voice.channel){
-
-      const connection = await msg.member.voice.channel.join();
-      console.log(i);
-      do{
-      const setPlay = () =>{
-        connection.play(ytdl(queue[command[1]], { filter: 'audioonly', volume: 0.15 }));
-      }
-
-      const Play = async () =>{
-        console.log("Reproduciendo...")
-        await setPlay();
-        console.log('Cancion finalizada')
-      }
-      Play();
-      i+=1;
-      }while(i<queue.length);
+      connection.play(ytdl(command[1], { filter: 'audioonly', volume: 0.15 }));
     }else{
       msg.reply('Necesitas estar en el canal de voz, no seas mens@');
     }
   }
 })
+
+
 
 client.on('message', async msg =>{
   if(!msg.guild) return;
@@ -53,6 +41,16 @@ client.on('message', async msg =>{
   }
 })
 
+//Help
+client.on('message', msg => {
+  if (msg.content === '/help') {
+    const embed = new MessageEmbed()
+      .setTitle('Lista de comandos')
+      .setColor('green')
+      .setDescription('Reproducir musica de Youtube: `play` <link>');
+    msg.channel.send(embed);
+  }
+});
 
 client.on('message', msg => {
   if (msg.content === 'embed') {
@@ -95,6 +93,9 @@ client.on('message', msg => {
   }
   if (msg.content === 'edvo') {
     msg.channel.send('ta bn wapo');
+  }
+  if (msg.content === 'calendaasdr') {
+    msg.channel.send('https://cdn.discordapp.com/attachments/749106602090430555/803806559968428052/IMG-20210126-WA0007.jpg');
   }
   // if (msg.author.username === 'Emile' && msg.author.discriminator === '5967') {
   //   function SendWaifus(){
