@@ -1,0 +1,27 @@
+{
+  "name": "MyFirstDiscordBot",
+  "version": "1.0.0",
+  "description": "Discord bot using Node JS and discord.js",
+  "main": "app.js",
+  "dependencies": {
+    "@discordjs/opus": "^0.3.3",
+    "discord.js": "^12.5.1",
+    "ffmpeg-static": "^4.2.7",
+    "ytdl-core": "^4.4.5"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vicrulum/MyFirstDiscordBot.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/vicrulum/MyFirstDiscordBot/issues"
+  },
+  "homepage": "https://github.com/vicrulum/MyFirstDiscordBot#readme"
+}
