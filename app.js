@@ -1,7 +1,7 @@
 const {Client, MessageEmbed, Message, Emoji} = require('discord.js');
 const client = new Client();
-const saludo = require('./module');
 const ytdl = require('ytdl-core');
+require('dotenv').config();
 
 client.on('ready', () => {
   console.log(`Logged in as ${client.user.tag}!`);
@@ -12,16 +12,15 @@ client.on('ready', () => {
 client.on('message', async msg =>{
   if(!msg.guild) return;
   var command = msg.content.split(" ")
-  const connection = await msg.member.voice.channel.join();
   if(command[0] === 'play'){
     if(msg.member.voice.channel){
+      const connection = await msg.member.voice.channel.join();
       connection.play(ytdl(command[1], { filter: 'audioonly', volume: 0.15 }));
     }else{
       msg.reply('Necesitas estar en el canal de voz, no seas mens@');
     }
   }
 })
-
 
 
 client.on('message', async msg =>{
@@ -107,4 +106,4 @@ client.on('message', msg => {
   // }
 });
 
-client.login('NjEwNjYxODE5Njk4MzgwODEx.XVIhIw.DnZUDqQlQM0JEEhQCnwl1TE2Jko');
+client.login(process.env.TOKEN);
