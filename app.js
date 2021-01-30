@@ -3,42 +3,89 @@ const client = new Client();
 const ytdl = require('ytdl-core');
 require('dotenv').config();
 
+var youtubeSearch = require("youtube-search")
+var search = require('youtube-search');
+
+
+//Youtube API
+var opts = {
+  maxResults: 1,
+  key: process.env.YTKEY
+};
+ 
+
+
 client.on('ready', () => {
   console.log(`Logged in as ${client.user.tag}!`);
 });
 
-
-
+//Reproducir cancion de Youtube usando el comando seguido del titulo del video
 client.on('message', async msg =>{
   if(!msg.guild) return;
   var command = msg.content.split(" ")
   if(command[0] === 'play'){
     if(msg.member.voice.channel){
       const connection = await msg.member.voice.channel.join();
-      connection.play(ytdl(command[1], { filter: 'audioonly', volume: 0.15 }));
+      command.shift();
+      console.log(command.join(" "));
+      search(command.join(" "), opts, function(err, results) {
+        if(err) return console.log(err);
+        connection.play(ytdl(results[0].link, { filter: 'audioonly', volume: 0.15 }))
+        console.log(results)
+        msg.channel.send("Reproduciendo: " + results[0].title);
+      });
+
     }else{
       msg.reply('Necesitas estar en el canal de voz, no seas mens@');
     }
   }
 })
 
-
+//Agregar canciones a lista la cola de reproduccion. COMPLETO
+var queue = []
 client.on('message', async msg =>{
   if(!msg.guild) return;
-  var setQueue = msg.content.split(" ");
-
-  if(setQueue[0] === 'queue'){
-      // console.log(setQueue);
-      if(!setQueue[1]){
-      msg.reply('Necesitas ingresar un URL valido')
-    }
-    else{
-      queue.push(setQueue[1]);
-      console.log(queue);
-      msg.reply('Cancion agregada :smile:');
+  var command = msg.content.split(" ")
+  if(command[0] === 'q'){
+    if(msg.member.voice.channel){
+      // const connection = await msg.member.voice.channel.join();
+      command.shift();
+      console.log(command.join(" "));
+      search(command.join(" "), opts, function(err, results) {
+        if(err) return console.log(err);
+        // connection.play(ytdl(results[0].link, { filter: 'audioonly', volume: 0.15 }));
+        console.log(results[0].title);
+        queue.push(results[0].link);
+        console.log(queue);
+        msg.channel.send("Canción añadida: " + results[0].title);
+      });
+    }else{
+      msg.reply('Ha ocurrido un error, intenta de nuevo');
     }
   }
 })
+
+
+//Reproducir cola. INCOMPLETO
+// client.on('message', async msg =>{
+//   if(!msg.guild) return;
+//   var command = msg.content.split(" ")
+//   if(command[0] === 'pq'){
+//     while(queue.length != 0){
+//       if(msg.member.voice.channel){
+//         const connection = await msg.member.voice.channel.join();
+//         command.shift();
+//         console.log(command.join(" "));
+//         await connection.play(ytdl(queue[0], { filter: 'audioonly', volume: 0.15 }));
+//         console.log("Playing..." + queue[0]);
+//         msg.channel.send("Reproduciendo: " + queue[0]);
+//         queue.shift();
+//       }else{
+//         msg.reply('Ha ocurrido un error, intenta de nuevo');
+//       }
+//     }
+//   }
+// })
 
 //Help
 client.on('message', msg => {
@@ -67,7 +114,7 @@ client.on('message', msg => {
     msg.reply('Pong!');
   }
   if (msg.content === 'mauri') {
-    msg.channel.send('no seas simp!');
+    msg.channel.send('ya no eres simp!');
   }
   if (msg.content === 'emile') {
     msg.channel.send('Bienvenido a casa a-amor... no es que te haya extrañado...¿Que me estas mirando?\nhttps://tenor.com/view/domestic-na-kanojo-domestic-girlfriend-rui-tachibana-anime-serious-gif-17080226');
